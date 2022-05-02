@@ -4,6 +4,8 @@ import createTheme from './createTheme';
 import propsToClassKey from './propsToClassKey';
 import defaultStyleFunctionSx from './styleFunctionSx';
 
+import isPropValid from '@emotion/is-prop-valid';
+
 function isEmpty(obj) {
   return Object.keys(obj).length === 0;
 }
@@ -55,7 +57,7 @@ const variantsResolver = (props, styles, theme, name) => {
 
 // Update /system/styled/#api in case if this changes
 export function shouldForwardProp(prop) {
-  return prop !== 'ownerState' && prop !== 'theme' && prop !== 'sx' && prop !== 'as';
+  return prop !== 'ownerState' && prop !== 'theme' && prop !== 'sx' && prop !== 'as' && isPropValid(prop);
 }
 
 export const systemDefaultTheme = createTheme();
