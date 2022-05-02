@@ -4,6 +4,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { createRenderer } from 'test/utils';
 import createStyled from './createStyled';
 import sx from './sx';
+// import isPropValid from '@emotion/is-prop-valid';
 
 describe('createStyled', () => {
   const { render } = createRenderer();
@@ -279,6 +280,30 @@ describe('createStyled', () => {
       expect(container.firstChild.firstChild).toHaveComputedStyle({
         marginRight: '80px',
       });
+    });
+  });
+
+  describe('should not be passing by default invalid props', () => {
+    const getAllAttributes = el => el
+        .getAttributeNames()
+        .reduce((obj, name) => ({
+          ...obj,
+          [name]: el.getAttribute(name)
+        }), {})
+
+    const styled = createStyled({});
+    const StyledThing = styled("span", /*{shouldForwardProp: isPropValid}*/)(({ color }) => ({
+      backgroundColor: color
+    }));
+
+    it.only('somecustomprop props should not be passed to the span', () => {
+      const { container } = render(
+        <StyledThing color='red' somecustomprop='test'>
+          Hello
+        </StyledThing>
+      );
+      expect(getAllAttributes(container.getElementsByTagName('span')[0])).include({color: 'red'});
+      expect(getAllAttributes(container.getElementsByTagName('span')[0])).not.include({somecustomprop: 'test'});
     });
   });
 });
